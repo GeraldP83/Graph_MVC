@@ -29,6 +29,9 @@ public class Controller {
 	private void addListener() {
 		view.setListener(new ButtonListener());
 	}
+	private void doNothing(){
+		System.out.println("bls");
+	}
 	
 	//TODO pass the model reference to the view
 	void update() {
