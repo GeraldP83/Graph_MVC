@@ -18,12 +18,27 @@ public class Controller {
 	private Model model;
 	
 	public Controller() {
-		int size = Integer.valueOf(JOptionPane.showInputDialog("Knotenanzahl eingeben: "));
+		String sizeFromInput = getInputFromUser();
+		int size = Integer.valueOf(sizeFromInput);		
 		view = new MainWindow(size);
 		model = new Model(size);
 		addListener();
 		view.setViewVisible(true);
 		update();
+	}
+
+	private String getInputFromUser() {
+		String sizeFromInput = null;
+		sizeFromInput = JOptionPane.showInputDialog("Knotenanzahl eingeben: ");			
+		if(sizeFromInput == null) {System.exit(0);}	
+		if (sizeFromInput.trim().length() == 0) {
+			do {
+				sizeFromInput = JOptionPane.showInputDialog("Knotenanzahl eingeben: ");
+				if(sizeFromInput == null) {System.exit(0);}
+				
+			} while (sizeFromInput.trim().length() == 0);
+		}
+		return sizeFromInput;
 	}
 
 	private void addListener() {
@@ -32,17 +47,22 @@ public class Controller {
 	
 	//TODO pass the model reference to the view
 	void update() {
-	view.update(model);
-	int[][] distance = model.getCalculatedDistAndWay().get(0);
-	int[][] way = model.getCalculatedDistAndWay().get(1);
-	for (int bRow = 0; bRow < distance.length; bRow++) {
-		for (int bColumn = 0; bColumn < distance.length; bColumn++) {
-			view.setDistanceButtonText(bRow, bColumn, String.valueOf(distance[bRow][bColumn]).equals("0") && bRow != bColumn ? "∞" 
-														: String.valueOf(distance[bRow][bColumn]));
-			view.setWayButtonText(bRow, bColumn, String.valueOf(way[bRow][bColumn]));
+		view.update(model);
+		int[][] distance = model.getCalculatedDistAndWay().get(0);
+		int[][] way = model.getCalculatedDistAndWay().get(1);
+		for (int bRow = 0; bRow < distance.length; bRow++) {
+			for (int bColumn = 0; bColumn < distance.length; bColumn++) {
+				view.setDistanceButtonText(
+						bRow,
+						bColumn,
+						String.valueOf(distance[bRow][bColumn]).equals("0")
+								&& bRow != bColumn ? "∞" : String
+								.valueOf(distance[bRow][bColumn]));
+				view.setWayButtonText(bRow, bColumn,
+						String.valueOf(way[bRow][bColumn]));
+			}
 		}
-	}
-		
+
 	}
 	//TODO refactor this silly Listener and implement an own one with coordinates...
 	private class ButtonListener implements ActionListener{
